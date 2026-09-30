@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT table_id from ctrl.table_config WHERE is_active=1 AND source_system='@{pipeline().parameters.source_system}'",
+							"value": "SELECT table_id from ctrl.table_config WHERE is_active=1 AND source_system='@{pipeline().parameters.source_system}'\n\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -80,7 +80,7 @@
 							}
 						},
 						{
-							"name": "Update date status",
+							"name": "Update date Failed status",
 							"type": "Script",
 							"dependsOn": [
 								{
@@ -107,7 +107,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "update ctrl.audit_log\nset status='Failed', end_time=SYSUTCDATETIME()\n\nwhere adf_run_id= pipeline().parameters.adf_run_idand table_id=@{pipeline().parameters.table_id}",
+											"value": "update ctrl.audit_log\nset status='Failed', end_time=SYSUTCDATETIME()\nwhere adf_run_id= '{pipeline().parameters.adf_run_id}' and table_id=@{item().table_id}",
 											"type": "Expression"
 										}
 									}
