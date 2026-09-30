@@ -55,7 +55,7 @@
 							"type": "ExecutePipeline",
 							"dependsOn": [
 								{
-									"activity": "Update date status_copy1",
+									"activity": "Inser inProgress status",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -116,7 +116,7 @@
 							}
 						},
 						{
-							"name": "Update date status_copy1",
+							"name": "Inser inProgress status",
 							"type": "Script",
 							"dependsOn": [],
 							"policy": {
@@ -136,7 +136,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "update ctrl.audit_log\nset status='Failed', end_time=SYSUTCDATETIME()\n\nwhere adf_run_id= and table_id=@{pipeline().parameters.table_id}",
+											"value": "INSERT into ctrl.audit_log (adf_run_id,table_id,stage,status,start_time)\nVALUES('a1',@{item().table_id},'Source_to_Silver','In_Progress',SYSUTCDATETIME)",
 											"type": "Expression"
 										}
 									}
@@ -152,6 +152,10 @@
 			"source_system": {
 				"type": "string",
 				"defaultValue": "neon_postgres"
+			},
+			"adf_run_id": {
+				"type": "string",
+				"defaultValue": "a2"
 			}
 		},
 		"variables": {
